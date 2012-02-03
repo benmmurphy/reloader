@@ -10,8 +10,9 @@
 -include_lib("kernel/include/file.hrl").
 
 -behaviour(gen_server).
--export([start/0, start_link/0]).
--export([stop/0]).
+-behaviour(application).
+-export([start/0, start/2, start_link/0]).
+-export([stop/0, stop/1]).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 -export([all_changed/0]).
 -export([is_changed/1]).
@@ -19,6 +20,12 @@
 -record(state, {last, tref}).
 
 %% External API
+
+start(normal, []) ->
+  reloader_sup:start_link().
+
+stop(_State) ->
+  ok.
 
 %% @spec start() -> ServerRet
 %% @doc Start the reloader.
